@@ -3,6 +3,7 @@ import { useState } from "react";
 
 export default function signup()
 {
+	const [username, setUsername] = useState("");
 	const [email, setemail] = useState("");
 	const [password, setPassword] = useState("");
 	const [confirmPassword, setConfirmPassword] = useState("");
@@ -12,7 +13,7 @@ export default function signup()
 	async function handleSubmit(event: React.FormEvent)
 	{
 		event.preventDefault();
-		if (!email || !password || !confirmPassword)
+		if (!username || !email || !password || !confirmPassword)
 		{
 			setmsg("Please fill in all fields");
 			setmsgtype("error");
@@ -27,11 +28,11 @@ export default function signup()
 
 		try
 		{
-			const rep = await fetch("http://localhost:8080/users/register",
+			const rep = await fetch("/api/users/register",
 			{
 				method : "POST",
 				headers : {"Content-Type": "application/json",},
-				body : JSON.stringify({email, password,}),
+				body : JSON.stringify({username, email, password,}),
 			});
 
 			const data = await rep.json();
@@ -70,6 +71,18 @@ export default function signup()
 				onSubmit={handleSubmit}
 				className="flex flex-col gap-4 max-w-sm"
 			>
+			<div>
+					<label>Username</label>
+					<input
+						className="border border-gray-300 p-2 rounded"
+						value={username}
+						onChange={(e) => {
+							setUsername(e.target.value);
+							setmsg("");
+							setmsgtype("");
+						}}
+					></input>
+				</div>
 				<div>
 					<label>Email</label>
 					<input
