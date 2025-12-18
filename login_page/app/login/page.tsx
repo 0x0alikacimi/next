@@ -1,6 +1,8 @@
 "use client"
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
+
 
 export default function Login()
 {
@@ -23,7 +25,7 @@ export default function Login()
 
 		try
 		{
-			const rep = await fetch("http://localhost:8080/users/login",
+			const rep = await fetch("/api/users/login",
 			{
 				method : "POST",
 				headers : {"Content-Type": "application/json",},
@@ -55,64 +57,116 @@ export default function Login()
 		}
 	}
 
+
 	return (
-		<div>
-			{msg && (
-				<p
-				className={
-					msgtype === "error" ? "text-red-600" : "text-green-600"
-				}>
-					{msgtype == "error" && "❌ "}
-					{msgtype == "success" && "✅ "}
-					{msg}
-				</p>
-			)}
-			<form
-				onSubmit={handlesubmit}
-				className="flex flex-col gap-4 max-w-sm"
-			>
-				<div>
-					<label>Email</label>
-					<input
-						className="border border-gray-300 p-2 rounded"
-						type="email"
-						value={email}
-						onChange={(e) => {
-							setemail(e.target.value);
-							setmsg("");
-							setmsgtype("");
-						}}
-					></input>
+		<div className="min-h-screen flex items-center justify-center bg-[#0b0f1a] px-6">
+			<div className=" grid grid-cols-1 md:grid-cols-2 w-full max-w-5xl min-h-[600px] rounded-2xl shadow-2xl bg-[#111827]
+				">
+				<div className="p-10 flex flex-col justify-center rounded-xl md:rounded-l-xl md:rounded-r-none">
+					<div className="mb-8">
+					<h1 className="text-3xl font-extrabold text-white tracking-wide">
+						Welcome Back
+					</h1>
+						<p className="mt-2 text-gray-400 text-base">
+							Enter your account information
+						</p>
+					</div>
+
+					<div className="min-h-[24px] mb-4">
+						{msg && (
+							<p
+							className={
+								msgtype === "error" ? "text-red-400" : "text-green-400"
+							}>
+								{msgtype == "error" && "❌ "}
+								{msgtype == "success" && "✅ "}
+								{msg}
+							</p>
+						)}
+					</div>
+
+					<form className="flex flex-col gap-6" onSubmit={handlesubmit}>
+						<div className="flex flex-col gap-1">
+							<label className="text-sm text-gray-300">Email</label>
+							<input
+								className=" w-full rounded-lg border border-gray-700 bg-[#0b0f1a] px-4 py-3 text-white placeholder-gray-500 transition focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+								type="email"
+								value={email}
+								onChange={(e) => {
+									setemail(e.target.value);
+									setmsg("");
+									setmsgtype("");
+								}}>
+							</input>
+						</div>
+
+						<div>
+							<label className="text-sm text-gray-300">Password</label>
+							<input
+								className=" w-full rounded-lg border border-gray-700 bg-[#0b0f1a] px-4 py-3 text-white placeholder-gray-500 transition focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+								type="password"
+								value={password}
+								onChange={(e) => {
+									setPassword(e.target.value)
+									setmsg("");
+									setmsgtype("");
+								}}>
+							</input>
+						</div>
+						<div className="text-right text-sm">
+							<Link
+								href="#"
+								className="text-blue-400 hover:text-blue-300">
+								Forgot password?
+							</Link>
+						</div>
+
+						<button
+							className=" w-full rounded-md bg-blue-600 text-white py-2 font-medium hover:bg-blue-700 transition duration-200 ease-in-out shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
+								type="submit">
+							Login
+						</button>
+
+					</form>
+
+					<div className="my-6 flex items-center gap-4">
+						<div className="h-px flex-1 bg-gray-700"></div>
+						<span className="text-sm text-gray-400">Or continue</span>
+						<div className="h-px flex-1 bg-gray-700"></div>
+					</div>
+
+					<div className="mt-6 text-center text-sm text-gray-400">
+						<p>
+							Don't have an account?{" "}
+							<Link
+								href="/signup"
+								className="text-blue-400 hover:text-blue-300 underline-offset-4 hover:underline">
+								Sign Up
+							</Link>
+						</p>
+					</div>
 				</div>
-				<div>
-					<label>Password</label>
-					<input
-						className="border border-gray-300 p-2 rounded"
-						type="password"
-						value={password}
-						onChange={(e) => {
-							setPassword(e.target.value)
-							setmsg("");
-							setmsgtype("");
-						}}
-					></input>
+				<div className="hidden md:relative md:flex overflow-hidden rounded-r-2xl bg-[#0f172a]">
+					{/* Background image */}
+					<Image
+						src="/imge.png"
+						alt="Login illustration"
+						fill
+						className="object-contain p-12"
+						priority
+					/>
+
+
+					{/* Dark overlay */}
+					{/* <div className="absolute inset-0 bg-black/40"></div> */}
+
+					{/* Optional content container (empty for now) */}
+					<div className="relative z-10 flex h-full w-full items-center justify-center">
+						{/* We can add text/icons here later */}
+					</div>
 				</div>
-				<button
-					type="submit"
-					className="bg-blue-600 text-white p-2 rounded hover:bg-blue-700"
-				>
-					login
-				</button>
-				<p>
-					Don't have an account ? {" "}
-					<Link
-						href="/signup"
-						className="text-blue-600 hover:underline"
-					>
-						Sign Up
-					</Link>
-				</p>
-			</form>
+
+			</div>
 		</div>
 	);
 }
