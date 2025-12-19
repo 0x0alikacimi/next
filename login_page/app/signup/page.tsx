@@ -74,7 +74,19 @@ export default function Signup()
 			<div className="grid grid-cols-1 md:grid-cols-2 w-full max-w-5xl min-h-[600px] rounded-2xl shadow-2xl bg-[#111827]">
 
 				{/* LEFT SIDE */}
-				<div className="p-10 flex flex-col justify-center rounded-xl md:rounded-l-xl md:rounded-r-none">
+				<div className="order-1 md:order-1 hidden md:relative md:flex overflow-hidden rounded-l-2xl bg-[#0f172a]">
+					<Image
+						src="/image.png"
+						alt="Signup illustration"
+						fill
+						className="object-contain p-12"
+						priority
+						/>
+				</div>
+
+
+				{/* RIGHT SIDE*/}
+				<div className="order-2 md:order-2 p-10 flex flex-col justify-center rounded-xl md:rounded-r-xl md:rounded-l-none">
 					<div className="mb-8">
 						<h1 className="text-3xl font-extrabold text-white tracking-wide">
 							Create Account
@@ -173,17 +185,6 @@ export default function Signup()
 							</Link>
 						</p>
 					</div>
-				</div>
-
-				{/* RIGHT SIDE IMAGE */}
-				<div className="hidden md:relative md:flex overflow-hidden rounded-r-2xl bg-[#0f172a]">
-					<Image
-						src="/image.png"
-						alt="Signup illustration"
-						fill
-						className="object-contain p-12"
-						priority
-					/>
 				</div>
 			</div>
 		</div>
