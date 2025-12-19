@@ -6,20 +6,25 @@ import Image from "next/image";
 
 export default function Login()
 {
-	// state = data that can change over time AND cause the UI to update
 	const [email, setemail] = useState("");
 	const [password, setPassword] = useState("");
 	const [msg, setmsg] = useState("");
 	const [msgtype, setmsgtype] = useState<"error" | "success" | "">("");
+	const [loading, setLoading] = useState(false);
 
 
 	async function handlesubmit(event : React.FormEvent)
 	{
 		event.preventDefault(); // stops reload
+		if (loading)
+			return ;
+		setLoading(true);
+
 		if (email === "" || password === "")
 		{
 			setmsg("Please fill in all fields");
 			setmsgtype("error");
+			setLoading(false);
 			return;
 		}
 
@@ -36,13 +41,15 @@ export default function Login()
 
 			if (!rep.ok)
 			{
-				setmsg(data.message || "Signup failed");
+				setmsg(data.message || "login failed");
 				setmsgtype("error");
+				setLoading(false);
 				return;
 			}
 
 			setmsg("Login successful");
 			setmsgtype("success");
+			setLoading(false);
 
 			console.log("Backend response:", data);
 		}
@@ -122,6 +129,7 @@ export default function Login()
 						</div>
 
 						<button
+							disabled={loading}
 							className=" w-full rounded-md bg-blue-600 text-white py-2 font-medium hover:bg-blue-700 transition duration-200 ease-in-out shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
 								type="submit">
 							Login
@@ -149,20 +157,15 @@ export default function Login()
 				<div className="hidden md:relative md:flex overflow-hidden rounded-r-2xl bg-[#0f172a]">
 					{/* Background image */}
 					<Image
-						src="/imge.png"
+						src="/image.png"
 						alt="Login illustration"
 						fill
 						className="object-contain p-12"
 						priority
 					/>
 
-
-					{/* Dark overlay */}
-					{/* <div className="absolute inset-0 bg-black/40"></div> */}
-
-					{/* Optional content container (empty for now) */}
 					<div className="relative z-10 flex h-full w-full items-center justify-center">
-						{/* We can add text/icons here later */}
+						{/* add text/icons here later */}
 					</div>
 				</div>
 
