@@ -30,6 +30,7 @@ export default function Home()
 
 	// While we check the token, show a simple blank or loading state
 	// This prevents the "flash" of private content for unauthorized users
+	
 	if (isLoading)
 	{
 		return (<div className="min-h-screen bg-[#0b0f1a] text-white flex items-center justify-center">Loading...</div>);
