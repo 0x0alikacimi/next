@@ -1,10 +1,12 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function Signup()
 {
+	const router = useRouter();
 	const [username, setUsername] = useState("");
 	const [email, setemail] = useState("");
 	const [password, setPassword] = useState("");
@@ -12,6 +14,15 @@ export default function Signup()
 	const [msg, setmsg] = useState("");
 	const [msgtype, setmsgtype] = useState<"error" | "success" | "">("");
 	const [loading, setLoading] = useState(false);
+
+	useEffect(() =>
+	{
+		const token = localStorage.getItem("token");
+		if (token)
+		{
+			router.push("/");
+		}
+	}, []);
 
 	async function handleSubmit(event: React.FormEvent)
 	{
@@ -54,7 +65,7 @@ export default function Signup()
 				return;
 			}
 
-			setmsg("Signup successful");
+			setmsg("Success! Please check your email to verify your account.");
 			setmsgtype("success");
 			setLoading(false);
 
@@ -71,10 +82,12 @@ export default function Signup()
 
 	return (
 		<div className="min-h-screen flex items-center justify-center bg-[#0b0f1a] px-6">
-			<div className="grid grid-cols-1 md:grid-cols-2 w-full max-w-5xl min-h-[600px] rounded-2xl shadow-2xl bg-[#111827]">
+			<div className="grid grid-cols-1 md:grid-cols-2 w-full max-w-5xl min-h-[600px]
+				rounded-2xl shadow-2xl
+				bg-white/5 backdrop-blur-xl border border-white/10">
 
 				{/* LEFT SIDE */}
-				<div className="order-1 md:order-1 hidden md:relative md:flex overflow-hidden rounded-l-2xl bg-[#0f172a]">
+				<div className="order-1 md:order-1 hidden md:relative md:flex overflow-hidden rounded-l-2xl">
 					<Image
 						src="/image.png"
 						alt="Signup illustration"

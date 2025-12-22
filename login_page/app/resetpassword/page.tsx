@@ -2,46 +2,81 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 
-export default function ForgotPassword()
+export default function ResetPassword()
 {
+	const searchParams = useSearchParams();
 	const router = useRouter();
-	const [email, setEmail] = useState("");
+	const token = searchParams.get("token");
+
+	const [password, setPassword] = useState("");
+	const [confirmPassword, setConfirmPassword] = useState("");
 	const [msg, setMsg] = useState("");
 	const [msgType, setMsgType] = useState<"error" | "success" | "">("");
 	const [loading, setLoading] = useState(false);
 
-	useEffect(() =>
+	useEffect (() =>
 	{
-		const token = localStorage.getItem("token");
-		if (token)
+		if (!token)
 		{
-			router.push("/"); // already logged in? sir tl3b go home hhhhhhh 
+			setMsg("Invalid or expired reset link.");
+			setMsgType("error");
 		}
-	}, []);
+	}, [token]);
 
 	async function handleSubmit(e: React.FormEvent)
 	{
 		e.preventDefault();
 
-		if (loading)
-				return;
+		if (loading || !token)
+			return;
 		setLoading(true);
 
-		if (!email)
+		if (!password || !confirmPassword)
 		{
-			setMsg("Please enter your email");
+			setMsg("Please fill in all fields");
 			setMsgType("error");
 			setLoading(false);
 			return;
 		}
 
-		// later connect to backend API
-		// check wach kayn had l'email
-		setMsg("If this email exists, a reset link was sent");
-		setMsgType("success");
-		setLoading(false);
+		if (password !== confirmPassword)
+		{
+			setMsg("Passwords do not match");
+			setMsgType("error");
+			setLoading(false);
+			return;
+		}
+
+		try
+		{
+			const rep = await fetch("/api/users/reset-password", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ token, password }),
+			});
+
+			const data = await rep.json();
+
+			if (!rep.ok)
+			{
+				setMsg(data.message || "Failed to reset password");
+				setMsgType("error");
+				setLoading(false);
+				return;
+			}
+			setMsg("Password reset successfully! Redirecting to login...");
+			setMsgType("success");
+
+			setTimeout(() => { router.push("/login"); }, 2000);
+		}
+		catch (error)
+		{
+			setMsg("Server error");
+			setMsgType("error");
+			setLoading(false);
+		}
 	}
 
 	return (
@@ -54,7 +89,7 @@ export default function ForgotPassword()
 				<div className="hidden md:relative md:flex overflow-hidden rounded-l-2xl">
 					<Image
 						src="/image.png"
-						alt="Forgot password illustration"
+						alt="Reset password illustration"
 						fill
 						className="object-contain p-12"
 						priority
@@ -65,13 +100,14 @@ export default function ForgotPassword()
 				<div className="p-10 flex flex-col justify-center rounded-xl md:rounded-r-2xl md:rounded-l-none">
 					<div className="mb-8">
 						<h1 className="text-3xl font-extrabold text-white tracking-wide">
-							Forgot Password
+							Reset Password
 						</h1>
 						<p className="mt-2 text-gray-400 text-base">
-							Enter your email to reset your password
+							Choose a new password for your account
 						</p>
 					</div>
 
+					{/* MESSAGE */}
 					<div className="min-h-[24px] mb-4">
 						{msg && (
 							<p className={msgType === "error" ? "text-red-400" : "text-green-400"}>
@@ -83,15 +119,32 @@ export default function ForgotPassword()
 					</div>
 
 					<form className="flex flex-col gap-6" onSubmit={handleSubmit}>
+						{/* NEW PASSWORD */}
 						<div className="flex flex-col gap-1">
-							<label className="text-sm text-gray-300">Email</label>
+							<label className="text-sm text-gray-300">New Password</label>
 							<input
-								type="email"
+								type="password"
 								className="w-full rounded-lg border border-gray-700 bg-[#0b0f1a] px-4 py-3 text-white
 									focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-								value={email}
+								value={password}
 								onChange={(e) => {
-									setEmail(e.target.value);
+									setPassword(e.target.value);
+									setMsg("");
+									setMsgType("");
+								}}
+							/>
+						</div>
+
+						{/* CONFIRM PASSWORD */}
+						<div className="flex flex-col gap-1">
+							<label className="text-sm text-gray-300">Confirm New Password</label>
+							<input
+								type="password"
+								className="w-full rounded-lg border border-gray-700 bg-[#0b0f1a] px-4 py-3 text-white
+									focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+								value={confirmPassword}
+								onChange={(e) => {
+									setConfirmPassword(e.target.value);
 									setMsg("");
 									setMsgType("");
 								}}
@@ -104,7 +157,7 @@ export default function ForgotPassword()
 							className="w-full rounded-md bg-blue-600 text-white py-2 font-medium
 								hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
 						>
-							{loading ? "Sending..." : "Send Reset Link"}
+							{loading ? "Resetting..." : "Reset Password"}
 						</button>
 					</form>
 

@@ -1,11 +1,13 @@
 "use client"
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 
 export default function Login()
 {
+	const router = useRouter();
 	const [email, setemail] = useState("");
 	const [password, setPassword] = useState("");
 	const [msg, setmsg] = useState("");
@@ -13,9 +15,22 @@ export default function Login()
 	const [loading, setLoading] = useState(false);
 
 
+	useEffect(() =>
+	{
+		//look for the token in the browser's internal storage
+		const token = localStorage.getItem("token");
+
+		// if a token exists  the user is already "logged in"
+		if (token)
+		{
+			console.log("User already logged in, redirecting...");
+			router.push("/");
+		}
+	}, []);
+
 	async function handlesubmit(event : React.FormEvent)
 	{
-		event.preventDefault(); // stops reload
+		event.preventDefault();
 		if (loading)
 			return ;
 		setLoading(true);
@@ -47,28 +62,35 @@ export default function Login()
 				return;
 			}
 
+			// we assume 'data.token' is sent by the backend (yarbi tkun wslt)
+			if (data.token)
+			{
+				localStorage.setItem("token", data.token); //save the token
+			}
+
 			setmsg("Login successful");
 			setmsgtype("success");
-			setLoading(false);
+
+			setTimeout(() => { router.push("/"); }, 1000); // Wait 1 second so user sees the "success" message
 
 			console.log("Backend response:", data);
 		}
-
-		//nredirecti luse l home wla ...
 
 		catch (error)
 		{
 			console.error(error);
 			setmsg("Server error");
 			setmsgtype("error");
+			setLoading(false);
 		}
 	}
 
 
 	return (
 		<div className="min-h-screen flex items-center justify-center bg-[#0b0f1a] px-6">
-			<div className=" grid grid-cols-1 md:grid-cols-2 w-full max-w-5xl min-h-[600px] rounded-2xl shadow-2xl bg-[#111827]
-				">
+			<div className="grid grid-cols-1 md:grid-cols-2 w-full max-w-5xl min-h-[600px]
+				rounded-2xl shadow-2xl
+				bg-white/5 backdrop-blur-xl border border-white/10">
 				<div className="p-10 flex flex-col justify-center rounded-xl md:rounded-l-xl md:rounded-r-none">
 					<div className="mb-8">
 					<h1 className="text-3xl font-extrabold text-white tracking-wide">
@@ -154,7 +176,7 @@ export default function Login()
 						</p>
 					</div>
 				</div>
-				<div className="hidden md:relative md:flex overflow-hidden rounded-r-2xl bg-[#0f172a]">
+				<div className="hidden md:relative md:flex overflow-hidden rounded-r-2xl">
 					{/* Background image */}
 					<Image
 						src="/image.png"
