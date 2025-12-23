@@ -1,9 +1,12 @@
 "use client";
+import Navbar from "./components/navbar";
 
-export default function Home() {
+export default function Home()
+{
 	return (
 		<div className="min-h-screen bg-[#0b0f1a] px-6 py-10">
 
+			<Navbar />
 			{/* MAIN CONTAINER */}
 			<div className="max-w-7xl mx-auto flex flex-col gap-10">
 
