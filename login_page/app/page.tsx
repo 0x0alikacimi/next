@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import Navbar from "./components/navbar";
 import { Bot, Users, Monitor, Globe } from "lucide-react";
 
-// Data Blueprints
 interface UserData {
 	username: string;
 	level: number;
