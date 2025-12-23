@@ -1,35 +1,113 @@
 "use client";
 
-export default function Home()
-{
+export default function Home() {
 	return (
-		<div className="min-h-screen bg-[#0b0f1a] text-white p-8">
-			<nav className="max-w-5xl mx-auto flex justify-between items-center mb-12">
-				<h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
-				<button className="px-4 py-2 bg-red-500/10 text-red-400 border border-red-500/20 rounded-lg">
-					Logout
-				</button>
-			</nav>
+		<div className="min-h-screen bg-[#0b0f1a] px-6 py-10">
 
-			<main className="max-w-5xl mx-auto">
-				<div className="bg-white/5 border border-white/10 rounded-2xl p-8 backdrop-blur-xl">
-					<h2 className="text-3xl font-extrabold mb-4">Welcome Back!</h2>
-					<p className="text-gray-400 mb-6">
-						UI-only preview. No authentication or backend logic.
-					</p>
+			{/* MAIN CONTAINER */}
+			<div className="max-w-7xl mx-auto flex flex-col gap-10">
 
-					<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-						<div className="bg-[#0b0f1a] p-6 rounded-xl border border-gray-800">
-							<p className="text-sm text-gray-500 uppercase">Status</p>
-							<p className="text-xl font-semibold text-green-400">Preview Mode</p>
-						</div>
-						<div className="bg-[#0b0f1a] p-6 rounded-xl border border-gray-800">
-							<p className="text-sm text-gray-500 uppercase">Auth</p>
-							<p className="text-xl font-semibold text-blue-400">Disabled</p>
+				{/* TOP SECTION */}
+				<div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+					{/* PLAYER OVERVIEW CARD */}
+					<div className="
+						rounded-2xl
+						bg-white/5 backdrop-blur-xl
+						border border-white/10
+						p-8
+					">
+						<h2 className="text-white text-xl font-semibold mb-6">
+							Player Overview
+						</h2>
+
+						<div className="flex items-center gap-6">
+							{/* Avatar placeholder */}
+							<div className="w-24 h-24 rounded-full bg-white/10" />
+
+							<div className="flex flex-col gap-2">
+								<p className="text-white text-lg font-medium">
+									Username
+								</p>
+								<p className="text-gray-400 text-sm">
+									Level 1
+								</p>
+
+								{/* Progress bar */}
+								<div className="w-48 h-2 rounded-full bg-white/10 overflow-hidden">
+									<div className="h-full w-1/3 bg-blue-600" />
+								</div>
+							</div>
 						</div>
 					</div>
+
+					{/* MATCH HISTORY CARD */}
+					<div className="
+						rounded-2xl
+						bg-white/5 backdrop-blur-xl
+						border border-white/10
+						p-8
+					">
+						<h2 className="text-white text-xl font-semibold mb-6">
+							Match History
+						</h2>
+
+						<div className="flex flex-col gap-4">
+							{/* Match row */}
+							<div className="flex items-center justify-between
+								bg-white/5 rounded-xl px-4 py-3">
+								<span className="text-white">6</span>
+								<span className="text-gray-400">|</span>
+								<span className="text-white">4</span>
+								<span className="text-gray-300">Opponent</span>
+							</div>
+
+							<div className="flex items-center justify-between
+								bg-white/5 rounded-xl px-4 py-3">
+								<span className="text-white">6</span>
+								<span className="text-gray-400">|</span>
+								<span className="text-white">4</span>
+								<span className="text-gray-300">Opponent</span>
+							</div>
+
+							<div className="flex items-center justify-between
+								bg-white/5 rounded-xl px-4 py-3">
+								<span className="text-white">6</span>
+								<span className="text-gray-400">|</span>
+								<span className="text-white">4</span>
+								<span className="text-gray-300">Opponent</span>
+							</div>
+						</div>
+					</div>
+
 				</div>
-			</main>
+
+				{/* GAME MODES SECTION */}
+				<div>
+					<h2 className="text-white text-xl font-semibold mb-6">
+						Game Modes
+					</h2>
+
+					<div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+						{["Play with AI", "Play with Friend", "Play Locally", "Play a Stranger"].map((title) => (
+							<div
+								key={title}
+								className="
+									h-40
+									rounded-2xl
+									bg-white/5 backdrop-blur-xl
+									border border-white/10
+									flex items-center justify-center
+									text-white font-medium
+								"
+							>
+								{title}
+							</div>
+						))}
+					</div>
+				</div>
+
+			</div>
 		</div>
 	);
 }
