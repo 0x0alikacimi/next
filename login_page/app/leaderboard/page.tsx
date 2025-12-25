@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Navbar from "../components/navbar";
 import { Crown } from "lucide-react";
 
@@ -14,42 +15,54 @@ interface LeaderboardUser
 
 export default function Leaderboard()
 {
+	const router = useRouter();
 	const [users, setUsers] = useState<LeaderboardUser[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [myUsername, setMyUsername] = useState("");
 
-	useEffect(() =>
-	{
+	useEffect(() => {
 		const fetchData = async () =>
 		{
+			const token = localStorage.getItem("token");
+			if (!token)
+			{
+				router.push("/login");
+				return;
+			}
+
 			try
 			{
-				const token = localStorage.getItem("token");
-				// get myy profile (to know who i am for highlighting)
+				// is the token real? security dial lahh y7sn l3wan
+				const userRes = await fetch("/api/users/me",{headers: { "Authorization": `Bearer ${token}` }});
+				if (userRes.status === 401 || userRes.status === 403)
+				{
+					localStorage.removeItem("token");
+					router.push("/login");
+					return;
+				}
 
-				const userRes = await fetch("/api/users/me", {headers: { "Authorization": `Bearer ${token}` }});
 				if (userRes.ok)
 				{
 					const userData = await userRes.json();
 					setMyUsername(userData.user.username);
 				}
 
-				const lbRes = await fetch("/api/leaderboard", {headers: { "Authorization": `Bearer ${token}` }});
+				const lbRes = await fetch("/api/leaderboard", {
+					headers: { "Authorization": `Bearer ${token}` }
+				});
 
 				if (lbRes.ok)
 				{
 					const lbData = await lbRes.json();
-					setUsers(lbData); // sorted array !!!
+					setUsers(lbData);
 				}
 			}
-
-			catch (error) {console.error("Failed to load leaderboard");}
-
+			catch (error) {console.error("Leaderboard connection error:", error);}
 			finally {setLoading(false);}
 		};
 
 		fetchData();
-	}, []);
+	}, [router]);
 
 	const first = users[0];
 	const second = users[1];
